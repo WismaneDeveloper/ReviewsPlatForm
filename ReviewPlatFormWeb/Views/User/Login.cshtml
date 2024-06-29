@@ -1,0 +1,121 @@
+﻿
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section styles{
+
+
+}
+
+
+<div id="layoutAuthentication">
+    <div id="layoutAuthentication_content">
+        <main>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-5">
+                        <div class="card shadow-lg border-0 rounded-lg mt-5">
+                            <div class="card-header"><h3 class="text-center font-weight-light my-4">Login</h3></div>
+                            <div class="card-body">
+                                <form id="LoginForm">
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="inputEmail" type="email" placeholder="name@example.com" />
+                                        <label for="inputEmail">Correo</label>
+                                    </div>
+                                    <div class="form-floating mb-3">
+                                        <input class="form-control" id="inputPassword" type="password" placeholder="Password" />
+                                        <label for="inputPassword">Contraseña</label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" id="inputRememberPassword" type="checkbox" value="" />
+                                        <label class="form-check-label" for="inputRememberPassword">Recordar contraseña</label>
+                                    </div>
+                                    <div class="d-flex align-items-center justify-content-between mt-4 mb-0">
+                                        <a class="small" href="password.html">olvidaste la contraseña?</a>
+                                        <button class="btn btn-primary" type="submit">Iniciar Sesión</button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="card-footer text-center py-3">
+                                <div class="small"><a href="@Url.Action("RegisterUser","User")">Necesitas una cuenta? Registrate!</a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="layoutAuthentication_footer">
+        <footer class="py-4 bg-light mt-auto">
+            <div class="container-fluid px-4">
+                <div class="d-flex align-items-center justify-content-between small">
+                    <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                    <div>
+                        <a href="#">Privacy Policy</a>
+                        &middot;
+                        <a href="#">Terms &amp; Conditions</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+</div>
+
+
+@section scripts {
+
+
+
+
+    <script>
+        $(document).ready(function () {
+            $("#LoginForm").submit(function (event) {
+                event.preventDefault();
+
+                var email = $("#inputEmail").val();
+                var password = $("#inputPassword").val();
+                var url = `https://localhost:7100/api/User/ObtenerUsuario?Email=${encodeURIComponent(email)}&Pass=${encodeURIComponent(password)}`;
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    success: function (data) {
+                        if (data && data.resultType === 0 && data.result.id) {
+                            // Limpiar el menú desplegable actual
+                            $(".nav-item.dropdown .dropdown-menu").empty();
+
+                            // Crear nuevas opciones de menú
+                            var newMenuItems = `
+                                    <li><a class="dropdown-item" href="#">Dashboard</a></li>
+                                    <li><a class="dropdown-item logout-button" href="#">Cerrar Sesión</a></li>
+                                `;
+                            $(".nav-item.dropdown .dropdown-menu").append(newMenuItems);
+
+                            // Evento para cerrar sesión
+                            $(".logout-button").click(function (event) {
+                                event.preventDefault();
+                                // Implementar lógica para cerrar sesión (eliminar datos del usuario, etc.)
+
+                                // Redirigir al usuario a la página de inicio de sesión
+                                window.location.href = '@Url.Action("Login", "User")';
+                            });
+
+                            // Redirigir al usuario a la página principal después de iniciar sesión
+                            window.location.href = '@Url.Action("Index", "Books")';
+                        } else {
+                            swal("", data.message, "warning");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Error durante el inicio de sesión:', error);
+                        alert('Ocurrió un error al intentar iniciar sesión.');
+                    }
+                });
+            });
+        });
+    </script>
+
+
+}
+
