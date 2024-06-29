@@ -1,6 +1,6 @@
 # ReviewsPlatForm
 Proyecto ASP.NET Core Web API para Reseñas de Libros
-Este proyecto es una aplicación ASP.NET Core Web API que permite a los usuarios buscar, ver y hacer reseñas sobre libros. Está diseñado utilizando una arquitectura en capas que incluye las siguientes capas principales:
+incluye las siguientes capas principales:
 
 Entities: Contiene las clases de entidades.
 Repository: Implementa la lógica de acceso a datos utilizando interfaces y clases concretas de repositorio.
